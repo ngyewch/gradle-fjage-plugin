@@ -6,7 +6,7 @@ Gradle plugin for the fjage framework.
 
 ### Kotlin DSL
 
-```
+```kotlin
 dependencies {
     "fjage"("com.github.org-arl:fjage:1.6.2")
     "fjage"("org.codehaus.groovy:groovy-all:2.5.8")
