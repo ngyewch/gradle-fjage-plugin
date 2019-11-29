@@ -35,6 +35,15 @@ tasks {
 * Depends on: `classes`
 * Run scripts scripts via `org.arl.fjage.shell.GroovyBoot`.
 
+#### Properties
+
+| Name | Type | Description |
+| --- | --- | --- |
+| scriptsDirectory | File           | Directory containing script files. Defaults to `src/fjage/groovy`. |
+| scripts          | List<String>   | Script names/locations (resolved against `scriptsDirectory`). |
+| classpath        | FileCollection | Classpath. Defaults to `project.configurations.getByName("testRuntimeClasspath")`. |
+| systemProperties | Map<String, ?> | System properties. |
+
 ## Lifecycle tasks
 
 ### `assemble`
