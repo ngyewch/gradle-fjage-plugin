@@ -4,6 +4,8 @@ Gradle plugin for the fjage framework.
 
 ## Sample usage
 
+### Kotlin DSL
+
 ```
 dependencies {
     "fjage"("com.github.org-arl:fjage:1.6.2")
