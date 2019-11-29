@@ -1,6 +1,6 @@
 # gradle-fjage-plugin
 
-Gradle plugin for the fjage framework.
+Gradle plugin for the [fjåge](https://github.com/org-arl/fjage) framework.
 
 ## Sample usage
 
