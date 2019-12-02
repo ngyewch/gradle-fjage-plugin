@@ -11,7 +11,7 @@ Gradle plugin for the [fjåge](https://github.com/org-arl/fjage) framework.
 
 ```kotlin
 plugins {
-    id("com.github.ngyewch.gradle-fjage-plugin") version "0.0.8"
+    id("com.github.ngyewch.gradle-fjage-plugin") version "0.1.0"
 }
 
 dependencies {
@@ -34,7 +34,7 @@ tasks {
 
 ```groovy
 plugins {
-    id("com.github.ngyewch.gradle-fjage-plugin") version "0.0.8"
+    id("com.github.ngyewch.gradle-fjage-plugin") version "0.1.0"
 }
 
 dependencies {
