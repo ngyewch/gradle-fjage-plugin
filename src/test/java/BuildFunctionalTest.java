@@ -29,6 +29,7 @@ public class BuildFunctionalTest {
                 .withProjectDir(new File(rootDirectory.getRoot(), "project1"))
                 .withArguments("build")
                 .withPluginClasspath(pluginClasspath)
+                .forwardOutput()
                 .build();
     }
 
@@ -38,6 +39,7 @@ public class BuildFunctionalTest {
                 .withProjectDir(new File(rootDirectory.getRoot(), "project1"))
                 .withArguments("test1")
                 .withPluginClasspath(pluginClasspath)
+                .forwardOutput()
                 .build();
     }
 }
