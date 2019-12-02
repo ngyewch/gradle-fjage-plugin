@@ -16,7 +16,7 @@ dependencies {
 pluginBundle {
     website = "https://github.com/ngyewch/gradle-fjage-plugin"
     vcsUrl = "https://github.com/ngyewch/gradle-fjage-plugin.git"
-    tags = listOf("gradle", "plugin", "fjage")
+    tags = listOf("fjage")
 }
 
 gradlePlugin {
