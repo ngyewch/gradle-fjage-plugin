@@ -11,7 +11,7 @@ Gradle plugin for the [fjåge](https://github.com/org-arl/fjage) framework.
 
 ```kotlin
 plugins {
-  id("com.github.ngyewch.gradle-fjage-plugin") version "0.0.8"
+    id("com.github.ngyewch.gradle-fjage-plugin") version "0.0.8"
 }
 
 dependencies {
@@ -27,6 +27,27 @@ tasks {
         scripts = listOf("initrc-console-shell", "01_hello")
         systemProperties = mapOf("java.util.logging.config.file" to "logging.properties")
     }
+}
+```
+
+### Groovy DSL
+
+```groovy
+plugins {
+    id("com.github.ngyewch.gradle-fjage-plugin") version "0.0.8"
+}
+
+dependencies {
+    "fjage"("com.github.org-arl:fjage:1.6.2")
+    "fjage"("org.codehaus.groovy:groovy-all:2.5.8")
+    implementation("org.yaml:snakeyaml:1.25")
+    testImplementation("junit:junit:4.12")
+}
+
+// run via ./gradlew test1 --console=plain --no-daemon
+tasks.register("test1", org.arl.fjage.gradle.FjageGroovyBootTask) {
+    scripts = ["initrc-console-shell", "01_hello"]
+    systemProperties = ["java.util.logging.config.file": "logging.properties"]
 }
 ```
 
