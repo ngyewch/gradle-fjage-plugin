@@ -32,6 +32,12 @@ public class FjageGroovyBootTask extends DefaultTask {
     @Input
     public Map<String, ?> systemProperties = Collections.EMPTY_MAP;
 
+    public FjageGroovyBootTask() {
+        super();
+
+        dependsOn("classes");
+    }
+
     @TaskAction
     public void doBoot()
             throws IOException {
