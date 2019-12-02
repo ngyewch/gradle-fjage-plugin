@@ -86,7 +86,7 @@ public class FjageGroovyBootTask extends DefaultTask {
             }
         }
 
-        new File("logs").mkdirs();
+        getProject().file("logs").mkdirs();
 
         final JavaExec javaExec = getProject().getTasks().create("fjageGroovyBootJavaExec", JavaExec.class);
         javaExec.setMain("org.arl.fjage.shell.GroovyBoot");
