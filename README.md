@@ -2,11 +2,18 @@
 
 Gradle plugin for the [fjåge](https://github.com/org-arl/fjage) framework.
 
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/ngyewch/gradle-fjage-plugin)
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/ngyewch/gradle-fjage-plugin/Java%20CI)
+
 ## Sample usage
 
 ### Kotlin DSL
 
 ```kotlin
+plugins {
+  id("com.github.ngyewch.gradle-fjage-plugin") version "0.0.2"
+}
+
 dependencies {
     "fjage"("com.github.org-arl:fjage:1.6.2")
     "fjage"("org.codehaus.groovy:groovy-all:2.5.8")
@@ -39,10 +46,10 @@ tasks {
 
 | Name | Type | Description |
 | --- | --- | --- |
-| scriptsDirectory | File           | Directory containing script files. Defaults to `src/fjage/groovy`. |
-| scripts          | List<String>   | Script names/locations (resolved against `scriptsDirectory`). |
-| classpath        | FileCollection | Classpath. Defaults to `project.configurations.getByName("testRuntimeClasspath")`. |
-| systemProperties | Map<String, ?> | System properties. |
+| `scriptsDirectory` | `File`           | Directory containing script files. Defaults to `src/fjage/groovy`. |
+| `scripts`          | `List<String>`   | Script names/locations (resolved against `scriptsDirectory`). |
+| `classpath`        | `FileCollection` | Classpath. Defaults to `project.configurations.getByName("testRuntimeClasspath")`. |
+| `systemProperties` | `Map<String, ?>` | System properties. |
 
 ## Lifecycle tasks
 
