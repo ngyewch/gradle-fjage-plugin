@@ -12,8 +12,6 @@ public class FjagePlugin implements Plugin<Project> {
                 .create("fjage");
         project.getTasks().register("packageFjage", FjagePackagingTask.class,
                 task -> task.dependsOn("jar"));
-        project.getTasks().getByName("assemble")
-                .dependsOn("packageFjage");
 
         project.afterEvaluate(p -> {
             final Configuration compileClasspathConfiguration = project.getConfigurations()
@@ -22,6 +20,9 @@ public class FjagePlugin implements Plugin<Project> {
                     .getByName("testImplementation");
             compileClasspathConfiguration.extendsFrom(fjageConfiguration);
             testImplementationConfiguration.extendsFrom(fjageConfiguration);
+
+            project.getTasks().getByName("assemble")
+                    .dependsOn("packageFjage");
         });
     }
 }
