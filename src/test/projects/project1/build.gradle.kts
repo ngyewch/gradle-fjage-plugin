@@ -25,14 +25,3 @@ tasks {
         systemProperties = mapOf("java.util.logging.config.file" to "logging.properties")
     }
 }
-
-/*
-afterEvaluate {
-    val fjageConfiguration:Configuration = configurations.getByName("fjage");
-    val compileClasspathConfiguration:Configuration = configurations.getByName("compileClasspath");
-    val testImplementationConfiguration:Configuration = configurations.getByName("testImplementation");
-
-    compileClasspathConfiguration.extendsFrom(fjageConfiguration)
-    testImplementationConfiguration.extendsFrom(fjageConfiguration)
-}
-*/
