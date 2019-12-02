@@ -2,6 +2,7 @@ package org.arl.fjage.gradle;
 
 import org.gradle.api.DefaultTask;
 import org.gradle.api.file.FileCollection;
+import org.gradle.api.plugins.JavaPluginConvention;
 import org.gradle.api.tasks.*;
 
 import java.io.File;
@@ -27,7 +28,8 @@ public class FjageGroovyBootTask extends DefaultTask {
     public List<String> scripts = Collections.EMPTY_LIST;
 
     @Classpath
-    public FileCollection classpath = getProject().getConfigurations().getByName("testRuntimeClasspath");
+    public FileCollection classpath = getProject().getConvention().getPlugin(JavaPluginConvention.class)
+            .getSourceSets().getByName("test").getRuntimeClasspath();
 
     @Input
     public Map<String, ?> systemProperties = Collections.EMPTY_MAP;
