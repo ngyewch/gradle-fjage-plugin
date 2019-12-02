@@ -13,15 +13,13 @@ public class FjagePlugin implements Plugin<Project> {
         project.getTasks().register("packageFjage", FjagePackagingTask.class,
                 task -> task.dependsOn("jar"));
 
-        project.beforeEvaluate(p -> {
-            final Configuration testImplementationConfiguration = project.getConfigurations()
-                    .getByName("testImplementation");
-            testImplementationConfiguration.extendsFrom(fjageConfiguration);
+        final Configuration testImplementationConfiguration = project.getConfigurations()
+                .getByName("testImplementation");
+        testImplementationConfiguration.extendsFrom(fjageConfiguration);
 
-            final Configuration compileClasspathConfiguration = project.getConfigurations()
-                    .getByName("compileClasspath");
-            compileClasspathConfiguration.extendsFrom(fjageConfiguration);
-        });
+        final Configuration compileClasspathConfiguration = project.getConfigurations()
+                .getByName("compileClasspath");
+        compileClasspathConfiguration.extendsFrom(fjageConfiguration);
 
         project.afterEvaluate(p -> {
             project.getTasks().getByName("assemble")
