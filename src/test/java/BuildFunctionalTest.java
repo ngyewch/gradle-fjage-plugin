@@ -24,10 +24,19 @@ public class BuildFunctionalTest {
     }
 
     @Test
-    public void testProject1() {
+    public void testProject1Build() {
         final BuildResult result = GradleRunner.create()
                 .withProjectDir(new File(rootDirectory.getRoot(), "project1"))
                 .withArguments("build")
+                .withPluginClasspath(pluginClasspath)
+                .build();
+    }
+
+    @Test
+    public void testProject1Run() {
+        final BuildResult result = GradleRunner.create()
+                .withProjectDir(new File(rootDirectory.getRoot(), "project1"))
+                .withArguments("test1")
                 .withPluginClasspath(pluginClasspath)
                 .build();
     }
