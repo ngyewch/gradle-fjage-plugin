@@ -26,7 +26,7 @@ gradlePlugin {
             displayName = "fjage Plugin"
             description = "Plugin for Gradle-based fjage development."
             implementationClass = "org.arl.fjage.gradle.FjagePlugin"
-            version = "0.0.5"
+            version = "0.0.6"
         }
     }
 }
