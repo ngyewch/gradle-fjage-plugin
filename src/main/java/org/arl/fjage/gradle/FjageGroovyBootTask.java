@@ -40,6 +40,38 @@ public class FjageGroovyBootTask extends DefaultTask {
         dependsOn("classes");
     }
 
+    public File getScriptsDirectory() {
+        return scriptsDirectory;
+    }
+
+    public void setScriptsDirectory(File scriptsDirectory) {
+        this.scriptsDirectory = scriptsDirectory;
+    }
+
+    public List<String> getScripts() {
+        return scripts;
+    }
+
+    public void setScripts(List<String> scripts) {
+        this.scripts = scripts;
+    }
+
+    public FileCollection getClasspath() {
+        return classpath;
+    }
+
+    public void setClasspath(FileCollection classpath) {
+        this.classpath = classpath;
+    }
+
+    public Map<String, ?> getSystemProperties() {
+        return systemProperties;
+    }
+
+    public void setSystemProperties(Map<String, ?> systemProperties) {
+        this.systemProperties = systemProperties;
+    }
+
     @TaskAction
     public void doBoot()
             throws IOException {
