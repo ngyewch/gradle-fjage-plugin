@@ -8,6 +8,10 @@ public class FjagePlugin implements Plugin<Project> {
 
     @Override
     public void apply(Project project) {
+        if (!project.getPluginManager().hasPlugin("java")) {
+            project.getPluginManager().apply("java");
+        }
+
         final Configuration fjageConfiguration = project.getConfigurations()
                 .create("fjage");
         project.getTasks().register("packageFjage", FjagePackagingTask.class,
