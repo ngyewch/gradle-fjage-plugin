@@ -67,7 +67,7 @@ tasks.register("test1", org.arl.fjage.gradle.FjageGroovyBootTask) {
 
 | Name | Type | Description |
 | --- | --- | --- |
-| `scriptsDirectory` | `File`           | Directory containing script files. Defaults to `src/fjage/groovy`. |
+| `baseDirectory`    | `File`           | Base directory. Defaults to `src/fjage`. |
 | `scripts`          | `List<String>`   | Script names/locations (resolved against `scriptsDirectory`). |
 | `classpath`        | `FileCollection` | Classpath. Defaults to `project.configurations.getByName("testRuntimeClasspath")`. |
 | `systemProperties` | `Map<String, ?>` | System properties. |
@@ -80,9 +80,10 @@ tasks.register("test1", org.arl.fjage.gradle.FjageGroovyBootTask) {
 
 ## Project layout
 
-### `src/fjage/groovy`
+### `src/fjage`
 
-* fjage scripts.
+* Base directory.
+
 
 ## Dependency management
 

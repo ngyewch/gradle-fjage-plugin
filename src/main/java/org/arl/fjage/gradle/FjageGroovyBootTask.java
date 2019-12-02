@@ -1,5 +1,6 @@
 package org.arl.fjage.gradle;
 
+import org.apache.commons.io.FileUtils;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.file.FileCollection;
 import org.gradle.api.plugins.JavaPluginConvention;
@@ -22,7 +23,7 @@ public class FjageGroovyBootTask extends DefaultTask {
     private static final String GROOVY_EXTENSION = ".groovy";
 
     @InputDirectory
-    public File scriptsDirectory = getProject().file("src/fjage/groovy");
+    public File baseDirectory = getProject().file("src/fjage");
 
     @Input
     public List<String> scripts = Collections.EMPTY_LIST;
@@ -40,12 +41,12 @@ public class FjageGroovyBootTask extends DefaultTask {
         dependsOn("classes");
     }
 
-    public File getScriptsDirectory() {
-        return scriptsDirectory;
+    public File getBaseDirectory() {
+        return baseDirectory;
     }
 
-    public void setScriptsDirectory(File scriptsDirectory) {
-        this.scriptsDirectory = scriptsDirectory;
+    public void setBaseDirectory(File baseDirectory) {
+        this.baseDirectory = baseDirectory;
     }
 
     public List<String> getScripts() {
@@ -86,16 +87,21 @@ public class FjageGroovyBootTask extends DefaultTask {
             }
         }
 
-        getProject().file("logs").mkdirs();
+        final File workingDirectory = new File(getProject().getBuildDir(), "fjageGroovyBoot");
+        workingDirectory.mkdirs();
+        FileUtils.copyDirectory(baseDirectory, workingDirectory);
+        new File(workingDirectory, "logs").mkdirs();
 
-        final JavaExec javaExec = getProject().getTasks().create("fjageGroovyBootJavaExec", JavaExec.class);
-        javaExec.setMain("org.arl.fjage.shell.GroovyBoot");
-        javaExec.setArgs(scriptLocations);
+        final JavaExec javaExec = getProject().getTasks().create("fjageGroovyBootJavaExec", JavaExec.class)
+                .setMain("org.arl.fjage.shell.GroovyBoot")
+                .setArgs(scriptLocations)
+                .setClasspath(classpath)
+                .setStandardInput(System.in)
+                .setStandardOutput(System.out)
+                .setErrorOutput(System.err);
         javaExec.setSystemProperties(systemProperties);
-        javaExec.setClasspath(classpath);
-        javaExec.setStandardInput(System.in);
-        javaExec.setStandardOutput(System.out);
-        javaExec.setErrorOutput(System.err);
+        javaExec.setWorkingDir(workingDirectory);
+
         javaExec.exec();
     }
 
@@ -133,14 +139,14 @@ public class FjageGroovyBootTask extends DefaultTask {
 
     private String normalizeFile(String scriptLocation)
             throws FileNotFoundException {
-        final URI baseUri = getProject().getProjectDir().toURI();
-        File scriptFile = new File(scriptsDirectory, scriptLocation);
+        final URI baseUri = baseDirectory.toURI();
+        File scriptFile = new File(baseDirectory, scriptLocation);
         if (scriptFile.isFile()) {
             return baseUri.relativize(scriptFile.toURI()).toString();
         } else if (scriptLocation.endsWith(GROOVY_EXTENSION)) {
             throw new FileNotFoundException(scriptFile.getPath());
         } else {
-            scriptFile = new File(scriptsDirectory, scriptLocation + GROOVY_EXTENSION);
+            scriptFile = new File(baseDirectory, scriptLocation + GROOVY_EXTENSION);
             if (scriptFile.isFile()) {
                 return baseUri.relativize(scriptFile.toURI()).toString();
             } else {

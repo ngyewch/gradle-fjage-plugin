@@ -21,7 +21,7 @@ configure<JavaPluginConvention> {
 
 tasks {
     register("test1", org.arl.fjage.gradle.FjageGroovyBootTask::class) {
-        scripts = listOf("initrc-console-shell", "01_hello")
+        scripts = listOf("etc/initrc-console-shell", "scripts/01_hello")
         systemProperties = mapOf("java.util.logging.config.file" to "logging.properties")
     }
 }
