@@ -62,6 +62,7 @@ tasks.register("test1", org.arl.fjage.gradle.FjageGroovyBootTask) {
 
 * Depends on: `classes`
 * Run scripts scripts via `org.arl.fjage.shell.GroovyBoot`.
+* Working directory: `$buildDir/fjageGroovyBoot`
 
 #### Properties
 
