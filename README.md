@@ -28,6 +28,17 @@ tasks {
         systemProperties = mapOf("java.util.logging.config.file" to "logging.properties")
     }
 }
+
+fjage {
+    // The following are defaults.
+    mainSourceDirectory = file("src/main/fjage")
+    testSourceDirectory = file("src/test/fjage")
+    
+    // Copy extra files.
+    copyInto("misc", fileTree("src/main/fjage2") {
+        exclude("**/*.log")
+    })
+}
 ```
 
 ### Groovy DSL
