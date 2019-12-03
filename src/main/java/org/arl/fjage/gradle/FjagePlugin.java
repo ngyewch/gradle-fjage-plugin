@@ -12,6 +12,10 @@ public class FjagePlugin implements Plugin<Project> {
             project.getPluginManager().apply("java");
         }
 
+        final FjageExtension fjageExtension = project.getExtensions().create("fjage", FjageExtension.class);
+        fjageExtension.setMainSourceDirectory(project.file("src/main/fjage"));
+        fjageExtension.setTestSourceDirectory(project.file("src/test/fjage"));
+
         final Configuration fjageConfiguration = project.getConfigurations()
                 .create("fjage");
         project.getTasks().register("packageFjage", FjagePackagingTask.class,

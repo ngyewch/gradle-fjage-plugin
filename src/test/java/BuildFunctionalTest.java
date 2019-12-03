@@ -9,6 +9,7 @@ import org.junit.rules.TemporaryFolder;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.zip.ZipFile;
 
 public class BuildFunctionalTest {
 
@@ -35,6 +36,10 @@ public class BuildFunctionalTest {
                 .withPluginClasspath(pluginClasspath)
                 .forwardOutput()
                 .build();
+        System.out.println("******** [project1/build] ********");
+        dumpDirectory();
+        System.out.println("--------");
+        listZip(new File(project1Dir, "build/distributions/project1.zip"));
     }
 
     @Test
@@ -45,6 +50,8 @@ public class BuildFunctionalTest {
                 .withPluginClasspath(pluginClasspath)
                 .forwardOutput()
                 .build();
+        System.out.println("******** [project1/run] ********");
+        dumpDirectory();
     }
 
     private void dumpDirectory() {
@@ -54,7 +61,19 @@ public class BuildFunctionalTest {
                     if (relativePath.startsWith(".gradle/")) {
                         return;
                     }
-                    System.out.println(relativePath);
+                    System.out.format("%s (%s)\n", relativePath, FileUtils.byteCountToDisplaySize(f.length()));
                 });
+    }
+
+    private void listZip(File f) {
+        try {
+            final ZipFile zipFile = new ZipFile(f);
+            zipFile.stream().forEach(zipEntry -> {
+                System.out.format("%s (%s) %s\n", zipEntry.getName(),
+                        FileUtils.byteCountToDisplaySize(zipEntry.getSize()), zipEntry.getLastModifiedTime());
+            });
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

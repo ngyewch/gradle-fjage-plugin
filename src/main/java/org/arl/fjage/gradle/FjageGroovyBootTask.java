@@ -4,7 +4,10 @@ import org.apache.commons.io.FileUtils;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.file.FileCollection;
 import org.gradle.api.plugins.JavaPluginConvention;
-import org.gradle.api.tasks.*;
+import org.gradle.api.tasks.Classpath;
+import org.gradle.api.tasks.Input;
+import org.gradle.api.tasks.JavaExec;
+import org.gradle.api.tasks.TaskAction;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -22,9 +25,6 @@ public class FjageGroovyBootTask extends DefaultTask {
     private static final String CLS_PREFIX = "cls://";
     private static final String GROOVY_EXTENSION = ".groovy";
 
-    @InputDirectory
-    public File baseDirectory = getProject().file("src/fjage");
-
     @Input
     public List<String> scripts = Collections.EMPTY_LIST;
 
@@ -39,14 +39,6 @@ public class FjageGroovyBootTask extends DefaultTask {
         super();
 
         dependsOn("classes");
-    }
-
-    public File getBaseDirectory() {
-        return baseDirectory;
-    }
-
-    public void setBaseDirectory(File baseDirectory) {
-        this.baseDirectory = baseDirectory;
     }
 
     public List<String> getScripts() {
@@ -76,21 +68,28 @@ public class FjageGroovyBootTask extends DefaultTask {
     @TaskAction
     public void doBoot()
             throws IOException {
-        final List<String> scriptLocations = new ArrayList<>();
-        for (final String scriptFilename : scripts) {
-            if (scriptFilename.startsWith(RES_PREFIX)) {
-                scriptLocations.add(normalizeRes(scriptFilename));
-            } else if (scriptFilename.startsWith(CLS_PREFIX)) {
-                scriptLocations.add(normalizeCls(scriptFilename));
-            } else {
-                scriptLocations.add(normalizeFile(scriptFilename));
-            }
-        }
+        final FjageExtension fjageExtension = getProject().getExtensions().getByType(FjageExtension.class);
 
         final File workingDirectory = new File(getProject().getBuildDir(), "fjageGroovyBoot");
         workingDirectory.mkdirs();
-        FileUtils.copyDirectory(baseDirectory, workingDirectory);
-        new File(workingDirectory, "logs").mkdirs();
+
+        if (fjageExtension.getMainSourceDirectory().isDirectory()) {
+            FileUtils.copyDirectory(fjageExtension.getMainSourceDirectory(), workingDirectory);
+        }
+        if (fjageExtension.getTestSourceDirectory().isDirectory()) {
+            FileUtils.copyDirectory(fjageExtension.getTestSourceDirectory(), workingDirectory);
+        }
+
+        final List<String> scriptLocations = new ArrayList<>();
+        for (final String scriptFilename : scripts) {
+            if (scriptFilename.startsWith(RES_PREFIX)) {
+                scriptLocations.add(normalizeRes(workingDirectory, scriptFilename));
+            } else if (scriptFilename.startsWith(CLS_PREFIX)) {
+                scriptLocations.add(normalizeCls(workingDirectory, scriptFilename));
+            } else {
+                scriptLocations.add(normalizeFile(workingDirectory, scriptFilename));
+            }
+        }
 
         final JavaExec javaExec = getProject().getTasks().create("fjageGroovyBootJavaExec", JavaExec.class)
                 .setMain("org.arl.fjage.shell.GroovyBoot")
@@ -105,7 +104,7 @@ public class FjageGroovyBootTask extends DefaultTask {
         javaExec.exec();
     }
 
-    private String normalizeRes(String scriptLocation)
+    private String normalizeRes(File baseDirectory, String scriptLocation)
             throws IOException {
         final boolean verify = false;
         if (verify) {
@@ -123,7 +122,7 @@ public class FjageGroovyBootTask extends DefaultTask {
         return scriptLocation;
     }
 
-    private String normalizeCls(String scriptLocation)
+    private String normalizeCls(File baseDirectory, String scriptLocation)
             throws FileNotFoundException {
         final boolean verify = false;
         if (verify) {
@@ -137,7 +136,7 @@ public class FjageGroovyBootTask extends DefaultTask {
         return scriptLocation;
     }
 
-    private String normalizeFile(String scriptLocation)
+    private String normalizeFile(File baseDirectory, String scriptLocation)
             throws FileNotFoundException {
         final URI baseUri = baseDirectory.toURI();
         File scriptFile = new File(baseDirectory, scriptLocation);

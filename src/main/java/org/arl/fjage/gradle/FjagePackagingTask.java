@@ -1,11 +1,15 @@
 package org.arl.fjage.gradle;
 
-import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.file.FileCollection;
 import org.gradle.api.tasks.TaskAction;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Iterator;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -14,13 +18,21 @@ public class FjagePackagingTask extends DefaultTask {
     @TaskAction
     public void doPackage()
             throws IOException {
+        final FjageExtension fjageExtension = getProject().getExtensions().getByType(FjageExtension.class);
+
         final File outputDir = new File(getProject().getBuildDir(), "distributions");
         outputDir.mkdirs();
         final File outputFile = new File(outputDir, getProject().getName() + ".zip");
         try (final ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(outputFile))) {
+            final ZipOutputStreamHelper zipOutputStreamHelper = new ZipOutputStreamHelper(zipOutputStream);
             writeManifest(zipOutputStream);
-            copy(zipOutputStream, "libs/", getProject().getConfigurations().getByName("runtimeClasspath"));
-            copy(zipOutputStream, "libs/", getProject().getTasks().getByName("jar").getOutputs().getFiles());
+            copy(zipOutputStreamHelper, "libs/",
+                    getProject().getConfigurations().getByName("runtimeClasspath"));
+            copy(zipOutputStreamHelper, "libs/",
+                    getProject().getTasks().getByName("jar").getOutputs().getFiles());
+            if (fjageExtension.getMainSourceDirectory().isDirectory()) {
+                copyDirectory(zipOutputStreamHelper, "", fjageExtension.getMainSourceDirectory());
+            }
         }
     }
 
@@ -32,21 +44,21 @@ public class FjagePackagingTask extends DefaultTask {
         zipOutputStream.closeEntry();
     }
 
-    private void copy(ZipOutputStream zipOutputStream, String prefix, FileCollection files)
+    private void copyDirectory(ZipOutputStreamHelper zipOutputStreamHelper, String prefix, File directory)
             throws IOException {
-        for (final File file : files) {
-            copy(zipOutputStream, prefix, file);
+        final Iterator<File> fileIterator = FileUtils.iterateFiles(directory, TrueFileFilter.INSTANCE,
+                TrueFileFilter.INSTANCE);
+        while (fileIterator.hasNext()) {
+            final File file = fileIterator.next();
+            final String relativePath = directory.toURI().relativize(file.toURI()).toString();
+            zipOutputStreamHelper.putFile(file, prefix + relativePath);
         }
     }
 
-    private void copy(ZipOutputStream zipOutputStream, String prefix, File file)
+    private void copy(ZipOutputStreamHelper zipOutputStreamHelper, String prefix, FileCollection files)
             throws IOException {
-        final String name = prefix + file.getName();
-        final ZipEntry zipEntry = new ZipEntry(name);
-        zipOutputStream.putNextEntry(zipEntry);
-        try (final InputStream inputStream = new FileInputStream(file)) {
-            IOUtils.copy(inputStream, zipOutputStream);
+        for (final File file : files) {
+            zipOutputStreamHelper.putFile(file, prefix + file.getName());
         }
-        zipOutputStream.closeEntry();
     }
 }

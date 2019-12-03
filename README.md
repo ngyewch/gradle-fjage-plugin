@@ -51,6 +51,17 @@ tasks.register("test1", org.arl.fjage.gradle.FjageGroovyBootTask) {
 }
 ```
 
+## Extension
+
+fjage
+
+### Properties
+
+| Name | Type | Description |
+| --- | --- | --- |
+| `mainSourceDirectory` | `File` | Main fjage directory. Defaults to `src/main/fjage`. |
+| `testSourceDirectory` | `File` | Test fjage directory. Defaults to `src/test/fjage`. |
+
 ## Tasks
 
 ### `packageFjage` - org.arl.fjage.gradle.FjagePackagingTask
@@ -68,8 +79,7 @@ tasks.register("test1", org.arl.fjage.gradle.FjageGroovyBootTask) {
 
 | Name | Type | Description |
 | --- | --- | --- |
-| `baseDirectory`    | `File`           | Base directory. Defaults to `src/fjage`. |
-| `scripts`          | `List<String>`   | Script locations (resolved against `baseDirectory`). |
+| `scripts`          | `List<String>`   | Script locations (resolved against `mainSourceDirectory` and `testSourceDirectory`). |
 | `classpath`        | `FileCollection` | Classpath. Defaults to `sourceSets.test.runtimeClasspath`. |
 | `systemProperties` | `Map<String, ?>` | System properties. |
 
@@ -81,10 +91,13 @@ tasks.register("test1", org.arl.fjage.gradle.FjageGroovyBootTask) {
 
 ## Project layout
 
-### `src/fjage`
+Additional directories.
 
-* Base directory.
-
+* src
+    * main
+        * fjage  `// fjage files for packaging/distribution`
+    * test
+        * fjage  `// fjage files for testing`
 
 ## Dependency management
 

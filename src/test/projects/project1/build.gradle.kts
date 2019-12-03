@@ -25,3 +25,6 @@ tasks {
         systemProperties = mapOf("java.util.logging.config.file" to "logging.properties")
     }
 }
+
+fjage {
+}
