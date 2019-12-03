@@ -27,4 +27,7 @@ tasks {
 }
 
 fjage {
+    copyInto("misc", project.fileTree("src/main/fjage2") {
+        exclude("**/*.log")
+    })
 }

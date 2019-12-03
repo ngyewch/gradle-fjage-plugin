@@ -33,6 +33,9 @@ public class FjagePackagingTask extends DefaultTask {
             if (fjageExtension.getMainSourceDirectory().isDirectory()) {
                 copyDirectory(zipOutputStreamHelper, "", fjageExtension.getMainSourceDirectory());
             }
+            for (final FjageExtension.CopyIntoEntry copyIntoEntry : fjageExtension.getCopyIntoEntries()) {
+                copy(zipOutputStreamHelper, copyIntoEntry);
+            }
         }
     }
 
@@ -53,6 +56,19 @@ public class FjagePackagingTask extends DefaultTask {
             final String relativePath = directory.toURI().relativize(file.toURI()).toString();
             zipOutputStreamHelper.putFile(file, prefix + relativePath);
         }
+    }
+
+    private void copy(ZipOutputStreamHelper zipOutputStreamHelper, FjageExtension.CopyIntoEntry copyIntoEntry) {
+        copyIntoEntry.getFileTree().visit(fileVisitDetails -> {
+            if (!fileVisitDetails.isDirectory()) {
+                try {
+                    zipOutputStreamHelper.putFile(fileVisitDetails.getFile(),
+                            copyIntoEntry.getDestination() + fileVisitDetails.getRelativePath());
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
     }
 
     private void copy(ZipOutputStreamHelper zipOutputStreamHelper, String prefix, FileCollection files)

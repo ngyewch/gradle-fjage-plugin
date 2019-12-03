@@ -79,6 +79,22 @@ public class FjageGroovyBootTask extends DefaultTask {
         if (fjageExtension.getTestSourceDirectory().isDirectory()) {
             FileUtils.copyDirectory(fjageExtension.getTestSourceDirectory(), workingDirectory);
         }
+        for (final FjageExtension.CopyIntoEntry copyIntoEntry : fjageExtension.getCopyIntoEntries()) {
+            copyIntoEntry.getFileTree().visit(fileVisitDetails -> {
+                if (!fileVisitDetails.isDirectory()) {
+                    final File file = new File(workingDirectory,
+                            copyIntoEntry.getDestination() + fileVisitDetails.getRelativePath());
+                    if (file.getParentFile() != null) {
+                        file.getParentFile().mkdirs();
+                    }
+                    try {
+                        FileUtils.copyFile(fileVisitDetails.getFile(), file);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            });
+        }
 
         final List<String> scriptLocations = new ArrayList<>();
         for (final String scriptFilename : scripts) {

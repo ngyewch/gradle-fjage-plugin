@@ -62,6 +62,13 @@ fjage
 | `mainSourceDirectory` | `File` | Main fjage directory. Defaults to `src/main/fjage`. |
 | `testSourceDirectory` | `File` | Test fjage directory. Defaults to `src/test/fjage`. |
 
+### Methods
+
+| Name | Type | Description |
+| --- | --- | --- |
+| `copyInto(String destination, FileTree fileTree)` | `void` | Copies the specified files into the specified destination directory in the fjage project. |
+| `copyInto(FileTree fileTree)`                     | `void` | Copies the specified files into the base directory of the fjage project. |
+
 ## Tasks
 
 ### `packageFjage` - org.arl.fjage.gradle.FjagePackagingTask
