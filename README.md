@@ -70,7 +70,7 @@ tasks.register("test1", org.arl.fjage.gradle.FjageGroovyBootTask) {
 | --- | --- | --- |
 | `baseDirectory`    | `File`           | Base directory. Defaults to `src/fjage`. |
 | `scripts`          | `List<String>`   | Script locations (resolved against `baseDirectory`). |
-| `classpath`        | `FileCollection` | Classpath. Defaults to `project.configurations.getByName("testRuntimeClasspath")`. |
+| `classpath`        | `FileCollection` | Classpath. Defaults to `sourceSets.test.runtimeClasspath`. |
 | `systemProperties` | `Map<String, ?>` | System properties. |
 
 ## Lifecycle tasks
