@@ -7,6 +7,8 @@ Gradle plugin for the [fjåge](https://github.com/org-arl/fjage) framework.
 
 ## Sample usage
 
+[Example projects](https://github.com/ngyewch/gradle-fjage-plugin-examples)
+
 ### Kotlin DSL
 
 ```kotlin
@@ -59,6 +61,17 @@ dependencies {
 tasks.register("test1", org.arl.fjage.gradle.FjageGroovyBootTask) {
     scripts = ["initrc-console-shell", "01_hello"]
     systemProperties = ["java.util.logging.config.file": "logging.properties"]
+}
+
+fjage {
+    // The following are defaults.
+    mainSourceDirectory = file("src/main/fjage")
+    testSourceDirectory = file("src/test/fjage")
+    
+    // Copy extra files.
+    copyInto("misc", fileTree("src/main/fjage2") {
+        exclude("**/*.log")
+    })
 }
 ```
 
