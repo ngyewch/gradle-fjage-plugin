@@ -8,7 +8,7 @@ repositories {
 }
 
 tasks {
-    register("testZip", Zip::class) {
+    register<Zip>("testZip") {
         from("src/test/projects") {
             exclude("**/.gradle/**")
         }
@@ -67,7 +67,7 @@ gradlePlugin {
             displayName = "fjage Plugin"
             description = "Plugin for Gradle-based fjage development."
             implementationClass = "org.arl.fjage.gradle.FjagePlugin"
-            version = "0.2.0"
+            version = "0.3.0"
         }
     }
 }
