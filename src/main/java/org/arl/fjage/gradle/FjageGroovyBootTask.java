@@ -1,7 +1,9 @@
 package org.arl.fjage.gradle;
 
 import org.apache.commons.io.FileUtils;
+import org.codehaus.groovy.control.MultipleCompilationErrorsException;
 import org.gradle.api.DefaultTask;
+import org.gradle.api.GradleException;
 import org.gradle.api.file.FileCollection;
 import org.gradle.api.plugins.JavaPluginConvention;
 import org.gradle.api.tasks.Classpath;
@@ -9,10 +11,7 @@ import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.JavaExec;
 import org.gradle.api.tasks.TaskAction;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -96,6 +95,8 @@ public class FjageGroovyBootTask extends DefaultTask {
             });
         }
 
+        final FjageScriptChecker scriptChecker = new FjageScriptChecker(classpath);
+        final ErrorCollectorHolder errorCollectorHolder = new ErrorCollectorHolder();
         final List<String> scriptLocations = new ArrayList<>();
         for (final String scriptFilename : scripts) {
             if (scriptFilename.startsWith(RES_PREFIX)) {
@@ -103,8 +104,18 @@ public class FjageGroovyBootTask extends DefaultTask {
             } else if (scriptFilename.startsWith(CLS_PREFIX)) {
                 scriptLocations.add(normalizeCls(workingDirectory, scriptFilename));
             } else {
-                scriptLocations.add(normalizeFile(workingDirectory, scriptFilename));
+                final String scriptLocation = normalizeFile(workingDirectory, scriptFilename);
+                scriptLocations.add(scriptLocation);
+                try {
+                    scriptChecker.check(new File(workingDirectory, scriptLocation));
+                } catch (MultipleCompilationErrorsException e) {
+                    errorCollectorHolder.add(e.getErrorCollector());
+                }
             }
+        }
+        if (errorCollectorHolder.getErrorCollector() != null) {
+            FjageScriptChecker.printErrors(errorCollectorHolder.getErrorCollector(), new PrintWriter(System.out));
+            throw new GradleException("Errors in script files");
         }
 
         final JavaExec javaExec = getProject().getTasks().create("fjageGroovyBootJavaExec", JavaExec.class)
