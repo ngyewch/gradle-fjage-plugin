@@ -6,7 +6,7 @@ import org.gradle.api.GradleException;
 import org.gradle.api.file.FileCollection;
 import org.gradle.api.plugins.JavaPluginConvention;
 import org.gradle.api.tasks.Classpath;
-import org.gradle.api.tasks.Input;
+import org.gradle.api.tasks.InputFiles;
 import org.gradle.api.tasks.TaskAction;
 
 import java.io.File;
@@ -15,7 +15,7 @@ import java.io.PrintWriter;
 
 public class FjageScriptCheckerTask extends DefaultTask {
 
-    @Input
+    @InputFiles
     public FileCollection scripts;
 
     @Classpath
@@ -26,6 +26,22 @@ public class FjageScriptCheckerTask extends DefaultTask {
         super();
 
         dependsOn("classes");
+    }
+
+    public FileCollection getScripts() {
+        return scripts;
+    }
+
+    public void setScripts(FileCollection scripts) {
+        this.scripts = scripts;
+    }
+
+    public FileCollection getClasspath() {
+        return classpath;
+    }
+
+    public void setClasspath(FileCollection classpath) {
+        this.classpath = classpath;
     }
 
     @TaskAction
