@@ -31,6 +31,9 @@ public class ZipUtils {
                 }
                 if (!zipEntry.isDirectory()) {
                     final File outputFile = new File(outputDirectory, zipEntry.getName());
+                    if (!outputFile.toPath().normalize().startsWith(outputDirectory.toPath().normalize())) {
+                        throw new IOException("Bad zip entry");
+                    }
                     final File parentDirectory = outputFile.getParentFile();
                     if (parentDirectory != null) {
                         parentDirectory.mkdirs();
